@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -24,47 +25,50 @@ const TableComponents = () => {
   };
 
   return (
-    <TableContainer component={Paper} className="table-container">
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableCell>First Name</TableCell>
-            <TableCell>Last Name</TableCell>
-            <TableCell>Mobile Number</TableCell>
-            <TableCell>Email</TableCell>
-            <TableCell>Gender</TableCell>
-            <TableCell>Password</TableCell>
-            <TableCell>Actions</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {tableData.map((item) => (
-            <TableRow key={item.id}>
-              <TableCell>{item.firstName}</TableCell>
-              <TableCell>{item.lastName}</TableCell>
-              <TableCell>{item.MobileNumber}</TableCell>
-              <TableCell>{item.mail}</TableCell>
-              <TableCell>{item.gender}</TableCell>
-              <TableCell>{item.password}</TableCell>
-              <TableCell>
-                <div className="actions">
-                  <Button variant="outlined" color="primary">
-                    Edit
-                  </Button>
-                  <Button
-                    variant="outlined"
-                    color="secondary"
-                    onClick={() => handleDelete(item.id)}
-                  >
-                    Delete
-                  </Button>
-                </div>
-              </TableCell>
+    <div className="table-body">
+      <TableContainer component={Paper} className="table-container">
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>First Name</TableCell>
+              <TableCell>Last Name</TableCell>
+              <TableCell>Mobile Number</TableCell>
+              <TableCell>Email</TableCell>
+              <TableCell>Gender</TableCell>
+              <TableCell>Password</TableCell>
+              <TableCell>Actions</TableCell>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
+          </TableHead>
+          <TableBody>
+            {tableData.map((item) => (
+              <TableRow key={item.id}>
+                <TableCell>{item.firstName}</TableCell>
+                <TableCell>{item.lastName}</TableCell>
+                <TableCell>{item.MobileNumber}</TableCell>
+                <TableCell>{item.mail}</TableCell>
+                <TableCell>{item.gender}</TableCell>
+                <TableCell>{item.password}</TableCell>
+                <TableCell>
+                  <div className="actions">
+                    <Button variant="outlined" color="primary">
+                      Edit
+                    </Button>
+                    <Button
+                      variant="outlined"
+                      color="secondary"
+                      onClick={() => handleDelete(item.id)}
+                    >
+                      Delete
+                    </Button>
+                  </div>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+      <Link to="/">Go to form</Link>
+    </div>
   );
 };
 

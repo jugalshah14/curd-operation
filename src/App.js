@@ -1,10 +1,16 @@
+import React from "react";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import FormComponents from "./components/form/FormComponents";
-import "./App.css";
+import TableComponents from "./components/table/TableComponents";
+
 const App = () => {
   return (
-    <div>
-      <FormComponents />
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route index element={<FormComponents />} />
+        <Route path="TableComponents" element={<TableComponents />} />
+      </Routes>
+    </BrowserRouter>
   );
 };
 

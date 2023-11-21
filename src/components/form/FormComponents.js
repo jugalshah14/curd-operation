@@ -1,7 +1,8 @@
 import * as React from "react";
+import { Link } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { useForm, Controller } from "react-hook-form";
-import Input from "@mui/material/Input";
+import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
@@ -9,8 +10,9 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import FormControl from "@mui/material/FormControl";
 import FormLabel from "@mui/material/FormLabel";
 import { v4 as uuidv4 } from "uuid";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import "./FormComponents.css";
-import TableComponents from "../table/TableComponents";
 
 const FormComponents = () => {
   const {
@@ -27,74 +29,73 @@ const FormComponents = () => {
     const storedData = JSON.parse(localStorage.getItem("formData")) || [];
     storedData.push(formDataWithId);
     localStorage.setItem("formData", JSON.stringify(storedData));
+    toast.success("Form submitted successfully!");
   };
 
   return (
     <div className="form-container">
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="header">
-          <h3>CURD Operation</h3>
+          <h3>CRUD Operation</h3>
         </div>
 
         <div className="row">
           <div className="col-md-6">
             <label className="FirstName">First Name*</label>
-            <Input
+            <TextField
+              error={errors.firstName}
+              helperText={
+                errors.firstName?.type === "required" &&
+                "First name is required"
+              }
               variant="outlined"
               {...register("firstName", { required: true })}
               aria-invalid={errors.firstName ? "true" : "false"}
               placeholder="Enter First Name"
             />
-            {errors.firstName?.type === "required" && (
-              <p role="alert" className="Error">
-                First name is required
-              </p>
-            )}
           </div>
           <div className="col-md-6">
             <label className="LastName">Last Name*</label>
-            <Input
+            <TextField
+              error={errors.lastName}
+              helperText={
+                errors.lastName?.type === "required" && "Last name is required"
+              }
               variant="outlined"
               {...register("lastName", { required: true })}
               aria-invalid={errors.lastName ? "true" : "false"}
               placeholder="Enter Last Name"
             />
-            {errors.lastName?.type === "required" && (
-              <p role="alert" className="Error">
-                Last name is required
-              </p>
-            )}
           </div>
         </div>
         <div className="row">
           <div className="col-md-6">
             <label className="MobileNumber">Mobile Number*</label>
-            <Input
+            <TextField
+              error={errors.MobileNumber}
+              helperText={
+                errors.MobileNumber?.type === "required" &&
+                "Mobile Number is required"
+              }
               type="number"
               variant="outlined"
               {...register("MobileNumber", { required: true })}
               aria-invalid={errors.MobileNumber ? "true" : "false"}
               placeholder="Enter Mobile Number"
             />
-            {errors.MobileNumber?.type === "required" && (
-              <p role="alert" className="Error">
-                Mobile Number is required
-              </p>
-            )}
           </div>
           <div className="col-md-6">
             <label className="email">E-Mail*</label>
-            <Input
+            <TextField
+              error={errors.mail}
+              helperText={
+                errors.mail?.type === "required" && "Email is Required"
+              }
               variant="outlined"
-              {...register("mail", { required: "Email Address is required" })}
+              {...register("mail", { required: true })}
               aria-invalid={errors.mail ? "true" : "false"}
               placeholder="Enter Email"
             />
-            {errors.mail && (
-              <p role="alert" className="Error">
-                {errors.mail.message}
-              </p>
-            )}
           </div>
         </div>
         <div className="row">
@@ -140,18 +141,17 @@ const FormComponents = () => {
           </div>
           <div className="col-md-6">
             <label className="Password">Password*</label>
-            <Input
+            <TextField
+              error={errors.password}
+              helperText={
+                errors.password?.type === "required" && "Password is required"
+              }
               type="password"
               variant="outlined"
               {...register("password", { required: true })}
               aria-invalid={errors.password ? "true" : "false"}
               placeholder="Enter Password"
             />
-            {errors.password?.type === "required" && (
-              <p role="alert" className="Error">
-                Password is required
-              </p>
-            )}
           </div>
         </div>
         <div className="button">
@@ -160,7 +160,8 @@ const FormComponents = () => {
           </Button>
         </div>
       </form>
-      <TableComponents />
+      <Link to="/TableComponents">Go to Table</Link>
+      <ToastContainer />
     </div>
   );
 };
