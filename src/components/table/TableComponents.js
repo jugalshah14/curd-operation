@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -8,10 +7,12 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import Button from "@mui/material/Button";
+import { useNavigate } from "react-router-dom";
 import "./TableStyle.css";
 
 const TableComponents = () => {
   const [tableData, setTableData] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const storedData = JSON.parse(localStorage.getItem("formData")) || [];
@@ -22,6 +23,10 @@ const TableComponents = () => {
     const updatedTableData = tableData.filter((item) => item.id !== id);
     setTableData(updatedTableData);
     localStorage.setItem("formData", JSON.stringify(updatedTableData));
+  };
+
+  const handleEdit = (id) => {
+    navigate(`/form/${id}`);
   };
 
   return (
@@ -50,7 +55,11 @@ const TableComponents = () => {
                 <TableCell>{item.password}</TableCell>
                 <TableCell>
                   <div className="actions">
-                    <Button variant="outlined" color="primary">
+                    <Button
+                      variant="outlined"
+                      color="primary"
+                      onClick={() => handleEdit(item.id)}
+                    >
                       Edit
                     </Button>
                     <Button
@@ -67,7 +76,6 @@ const TableComponents = () => {
           </TableBody>
         </Table>
       </TableContainer>
-      <Link to="/">Go to form</Link>
     </div>
   );
 };

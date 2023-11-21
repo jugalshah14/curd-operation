@@ -1,0 +1,17 @@
+nav{
+    display: flex;
+    align-items: flex-end;
+    flex-direction: column;
+    padding: 20px 40px;
+    position: absolute;
+    width: 100vw;
+    background-color: rgb(255, 255, 255);
+}
+ul{
+    display: flex;
+    list-style: none;
+    gap: 20px;
+}
+li path{
+    color: #F1AABA;
+}
