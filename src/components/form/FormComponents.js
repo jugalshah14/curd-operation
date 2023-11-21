@@ -1,14 +1,14 @@
 import * as React from "react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { useForm, Controller } from "react-hook-form";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
+import LinearProgress from "@mui/material/LinearProgress";
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormControl from "@mui/material/FormControl";
-import FormLabel from "@mui/material/FormLabel";
 import { v4 as uuidv4 } from "uuid";
 import { ToastContainer, toast } from "react-toastify";
 import "./FormComponents.css";
@@ -23,6 +23,12 @@ const FormComponents = ({ editData, editMode }) => {
     handleSubmit,
     setValue,
   } = useForm();
+  const [passwordStrength, setPasswordStrength] = useState(0);
+  const handlePasswordChange = (e) => {
+    const password = e.target.value;
+    const strength = password.length / 8;
+    setPasswordStrength(strength);
+  };
 
   useEffect(() => {
     if (editMode) {
@@ -115,12 +121,21 @@ const FormComponents = ({ editData, editMode }) => {
             <TextField
               error={errors.MobileNumber}
               helperText={
-                errors.MobileNumber?.type === "required" &&
-                "Mobile Number is required"
+                errors.MobileNumber?.type === "required"
+                  ? "Mobile Number is required"
+                  : errors.MobileNumber?.type === "pattern"
+                  ? "Invalid mobile number"
+                  : ""
               }
-              type="number"
+              type="text"
               variant="outlined"
-              {...register("MobileNumber", { required: true })}
+              {...register("MobileNumber", {
+                required: "Mobile Number is required",
+                pattern: {
+                  value: /^[0-9]{10}$/,
+                  message: "Invalid mobile number",
+                },
+              })}
               aria-invalid={errors.MobileNumber ? "true" : "false"}
               placeholder="Enter Mobile Number"
             />
@@ -130,10 +145,20 @@ const FormComponents = ({ editData, editMode }) => {
             <TextField
               error={errors.mail}
               helperText={
-                errors.mail?.type === "required" && "Email is Required"
+                errors.mail?.type === "required"
+                  ? "Email is Required"
+                  : errors.mail?.type === "pattern"
+                  ? "Invalid email format"
+                  : ""
               }
               variant="outlined"
-              {...register("mail", { required: true })}
+              {...register("mail", {
+                required: "Email is required",
+                pattern: {
+                  value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                  message: "Invalid email format",
+                },
+              })}
               aria-invalid={errors.mail ? "true" : "false"}
               placeholder="Enter Email"
             />
@@ -142,9 +167,7 @@ const FormComponents = ({ editData, editMode }) => {
         <div className="row">
           <div className="col-md-6">
             <FormControl>
-              <FormLabel id="demo-row-radio-buttons-group-label">
-                Gender
-              </FormLabel>
+              <label>Gender</label>
               <Controller
                 name="gender"
                 control={control}
@@ -184,9 +207,20 @@ const FormComponents = ({ editData, editMode }) => {
               }
               type="password"
               variant="outlined"
-              {...register("password", { required: true })}
+              {...register("password", {
+                required: "Password is required",
+                minLength: {
+                  value: 8,
+                  message: "Password must be at least 8 characters long",
+                },
+              })}
               aria-invalid={errors.password ? "true" : "false"}
               placeholder="Enter Password"
+              onChange={handlePasswordChange}
+            />
+            <LinearProgress
+              variant="determinate"
+              value={passwordStrength * 100}
             />
           </div>
         </div>

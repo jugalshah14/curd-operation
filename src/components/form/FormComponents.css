@@ -31,7 +31,9 @@ form{
     align-items: flex-end;
     margin-top: 20px;
 }
-
+label{
+    font-size: 14px;
+}
 
 .Error{
     color: red;
