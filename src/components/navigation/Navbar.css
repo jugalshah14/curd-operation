@@ -6,12 +6,15 @@ nav{
     position: absolute;
     width: 100vw;
     background-color: rgb(255, 255, 255);
+    justify-content: center;
 }
 ul{
     display: flex;
     list-style: none;
     gap: 20px;
+    margin-bottom: 0;
 }
-li path{
-    color: #F1AABA;
+a{
+    color: black !important;
+    text-decoration: none !important;
 }

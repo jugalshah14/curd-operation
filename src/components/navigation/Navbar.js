@@ -1,7 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import InsertDriveFileIcon from "@mui/icons-material/InsertDriveFile";
-import TableChartIcon from "@mui/icons-material/TableChart";
+
 import "./Navbar.css";
 
 const Navbar = () => {
@@ -9,14 +8,10 @@ const Navbar = () => {
     <nav>
       <ul>
         <li>
-          <Link to="/form">
-            <InsertDriveFileIcon />
-          </Link>
+          <Link to="/form">ADD</Link>
         </li>
         <li>
-          <Link to="/">
-            <TableChartIcon />
-          </Link>
+          <Link to="/">LIST</Link>
         </li>
       </ul>
     </nav>

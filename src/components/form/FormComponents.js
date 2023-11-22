@@ -119,7 +119,7 @@ const FormComponents = ({ editData, editMode }) => {
           <div className="col-md-6">
             <label className="FirstName">First Name*</label>
             <TextField
-              error={errors.firstName}
+              error={Boolean(errors.firstName)}
               helperText={
                 errors.firstName?.type === "required" &&
                 "First name is required"
@@ -133,7 +133,7 @@ const FormComponents = ({ editData, editMode }) => {
           <div className="col-md-6">
             <label className="LastName">Last Name*</label>
             <TextField
-              error={errors.lastName}
+              error={Boolean(errors.lastName)}
               helperText={
                 errors.lastName?.type === "required" && "Last name is required"
               }
@@ -148,7 +148,7 @@ const FormComponents = ({ editData, editMode }) => {
           <div className="col-md-6">
             <label className="MobileNumber">Mobile Number*</label>
             <TextField
-              error={errors.MobileNumber}
+              error={Boolean(errors.MobileNumber)}
               helperText={
                 errors.MobileNumber?.type === "required"
                   ? "Mobile Number is required"
@@ -172,7 +172,7 @@ const FormComponents = ({ editData, editMode }) => {
           <div className="col-md-6">
             <label className="email">E-Mail*</label>
             <TextField
-              error={errors.mail}
+              error={Boolean(errors.mail)}
               helperText={
                 errors.mail?.type === "required"
                   ? "Email is Required"
@@ -229,7 +229,7 @@ const FormComponents = ({ editData, editMode }) => {
           <div className="col-md-6">
             <label className="Password">Password*</label>
             <TextField
-              error={errors.password}
+              error={Boolean(errors.password)}
               helperText={
                 errors.password?.type === "required" && "Password is required"
               }
@@ -238,10 +238,13 @@ const FormComponents = ({ editData, editMode }) => {
               variant="outlined"
               {...register("password", {
                 required: true,
+                onChange: (e) => {
+                  handlePasswordChange(e);
+                },
               })}
               aria-invalid={errors.password ? "true" : "false"}
               placeholder="Enter Password"
-              onChange={handlePasswordChange}
+              // onChange={handlePasswordChange}
             />
             <p className="PasswordNote">
               **Note: A strong password must include 8 characters, 1 uppercase
