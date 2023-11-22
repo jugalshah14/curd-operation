@@ -8,6 +8,7 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
+import Checkbox from "@mui/material/Checkbox";
 import { useNavigate } from "react-router-dom";
 import "./TableStyle.css";
 
@@ -15,6 +16,8 @@ const TableComponents = () => {
   const [tableData, setTableData] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredData, setFilteredData] = useState([]);
+  const [selectedRows, setSelectedRows] = useState([]);
+  const [selectAll, setSelectAll] = useState(false);
   const navigate = useNavigate();
 
   const updateTableData = () => {
@@ -50,6 +53,13 @@ const TableComponents = () => {
     }
   };
 
+  const handleSelectAll = () => {
+    setSelectAll((prevSelectAll) => !prevSelectAll);
+    setSelectedRows((prevSelectedRows) =>
+      !selectAll ? filteredData.map((item) => item.id) : []
+    );
+  };
+
   const handleDelete = (id) => {
     const updatedTableData = tableData.filter((item) => item.id !== id);
     setTableData(updatedTableData);
@@ -57,8 +67,30 @@ const TableComponents = () => {
     localStorage.setItem("formData", JSON.stringify(updatedTableData));
   };
 
+  const handleDeleteSelected = () => {
+    const updatedTableData = tableData.filter(
+      (item) => !selectedRows.includes(item.id)
+    );
+    setTableData(updatedTableData);
+    setFilteredData(updatedTableData);
+    setSelectedRows([]);
+    setSelectAll(false);
+    localStorage.setItem("formData", JSON.stringify(updatedTableData));
+  };
+
   const handleEdit = (id) => {
     navigate(`/form/${id}`);
+  };
+
+  const handleCheckboxChange = (id) => {
+    if (selectedRows.includes(id)) {
+      setSelectedRows((prevSelectedRows) =>
+        prevSelectedRows.filter((rowId) => rowId !== id)
+      );
+      setSelectAll(false);
+    } else {
+      setSelectedRows((prevSelectedRows) => [...prevSelectedRows, id]);
+    }
   };
 
   return (
@@ -69,11 +101,24 @@ const TableComponents = () => {
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
+        <div className="actions">
+          <Button
+            variant="contained"
+            color="secondary"
+            onClick={handleDeleteSelected}
+            disabled={selectedRows.length === 0}
+          >
+            Delete
+          </Button>
+        </div>
       </div>
       <TableContainer component={Paper} className="table-container">
         <Table>
           <TableHead>
             <TableRow>
+              <TableCell>
+                <Checkbox checked={selectAll} onChange={handleSelectAll} />
+              </TableCell>
               <TableCell>First Name</TableCell>
               <TableCell>Last Name</TableCell>
               <TableCell>Mobile Number</TableCell>
@@ -86,6 +131,12 @@ const TableComponents = () => {
           <TableBody>
             {filteredData.map((item) => (
               <TableRow key={item.id}>
+                <TableCell>
+                  <Checkbox
+                    checked={selectedRows.includes(item.id)}
+                    onChange={() => handleCheckboxChange(item.id)}
+                  />
+                </TableCell>
                 <TableCell>{item.firstName}</TableCell>
                 <TableCell>{item.lastName}</TableCell>
                 <TableCell>{item.MobileNumber}</TableCell>

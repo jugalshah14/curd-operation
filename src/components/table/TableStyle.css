@@ -17,9 +17,10 @@
 .search{
     width: 80%;
     padding: 20px;
-    align-items: flex-end;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 20px;
     display: flex;
-    flex-direction: column;
 }
 .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input{
     padding: 10px !important;
