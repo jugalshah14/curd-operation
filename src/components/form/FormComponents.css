@@ -38,3 +38,9 @@ label{
 .Error{
     color: red;
 }
+.css-eglki6-MuiLinearProgress-root{
+    background-color: transparent !important;
+}
+.PasswordNote{
+    font-size: 12px;
+}

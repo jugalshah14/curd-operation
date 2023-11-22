@@ -26,7 +26,26 @@ const FormComponents = ({ editData, editMode }) => {
   const [passwordStrength, setPasswordStrength] = useState(0);
   const handlePasswordChange = (e) => {
     const password = e.target.value;
-    const strength = password.length / 8;
+    const lengthRegex = /.{8,}/;
+    const specialCharRegex = /[!@#$%^&*(),.?":{}|<>]/;
+    const uppercaseRegex = /[A-Z]/;
+    const lowercaseRegex = /[a-z]/;
+    const numberRegex = /\d/;
+
+    const lengthValid = lengthRegex.test(password);
+    const specialCharValid = specialCharRegex.test(password);
+    const uppercaseValid = uppercaseRegex.test(password);
+    const lowercaseValid = lowercaseRegex.test(password);
+    const numberValid = numberRegex.test(password);
+
+    const strength =
+      (lengthValid +
+        specialCharValid +
+        uppercaseValid +
+        lowercaseValid +
+        numberValid) /
+      5;
+
     setPasswordStrength(strength);
   };
 
@@ -34,6 +53,11 @@ const FormComponents = ({ editData, editMode }) => {
     if (editMode) {
       Object.keys(editData).forEach((key) => {
         setValue(key, editData[key]);
+        setValue(key, key === "password" ? "********" : editData[key]);
+
+        if (key === "password") {
+          setPasswordStrength(1);
+        }
       });
     }
   }, [editMode, editData, setValue]);
@@ -48,8 +72,14 @@ const FormComponents = ({ editData, editMode }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
   const location = useLocation();
+
   const onSubmit = (data) => {
     const urlId = location.pathname.split("/form/")[1];
+    data.gender = data.gender ?? "male";
+    // if (!Boolean(id) && passwordStrength < 0.8) {
+    //   toast.error("Password does not meet the required specifications");
+    //   return;
+    // }
 
     if (urlId) {
       const storedData = JSON.parse(localStorage.getItem("formData")) || [];
@@ -85,7 +115,6 @@ const FormComponents = ({ editData, editMode }) => {
         <div className="header">
           <h3>CRUD Operation</h3>
         </div>
-
         <div className="row">
           <div className="col-md-6">
             <label className="FirstName">First Name*</label>
@@ -167,26 +196,25 @@ const FormComponents = ({ editData, editMode }) => {
         <div className="row">
           <div className="col-md-6">
             <FormControl>
-              <label>Gender</label>
+              <label>Gender*</label>
               <Controller
                 name="gender"
+                defaultValue="male"
                 control={control}
                 render={({ field }) => (
                   <RadioGroup
-                    row
                     aria-labelledby="demo-row-radio-buttons-group-label"
-                    defaultValue="female"
                     {...field}
                   >
-                    <FormControlLabel
-                      value="female"
-                      control={<Radio />}
-                      label="Female"
-                    />
                     <FormControlLabel
                       value="male"
                       control={<Radio />}
                       label="Male"
+                    />
+                    <FormControlLabel
+                      value="female"
+                      control={<Radio />}
+                      label="Female"
                     />
                     <FormControlLabel
                       value="other"
@@ -206,18 +234,19 @@ const FormComponents = ({ editData, editMode }) => {
                 errors.password?.type === "required" && "Password is required"
               }
               type="password"
+              disabled={Boolean(id)}
               variant="outlined"
               {...register("password", {
-                required: "Password is required",
-                minLength: {
-                  value: 8,
-                  message: "Password must be at least 8 characters long",
-                },
+                required: true,
               })}
               aria-invalid={errors.password ? "true" : "false"}
               placeholder="Enter Password"
               onChange={handlePasswordChange}
             />
+            <p className="PasswordNote">
+              **Note: A strong password must include 8 characters, 1 uppercase
+              letter, 1 lowercase letter, 1 number, and 1 special character.
+            </p>
             <LinearProgress
               variant="determinate"
               value={passwordStrength * 100}
