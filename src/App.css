@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Bigelow+Rules&family=Montserrat&family=Nunito+Sans:opsz@6..12&family=Poppins&display=swap');
 
 * {
-    font-family: 'Nunito Sans', sans-serif;
+    font-family: 'Nunito Sans', sans-serif !important;
 }
 
 body {

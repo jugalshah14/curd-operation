@@ -9,6 +9,8 @@ import Paper from "@mui/material/Paper";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Checkbox from "@mui/material/Checkbox";
+import TablePagination from "@mui/material/TablePagination";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import { useNavigate } from "react-router-dom";
 import "./TableStyle.css";
 
@@ -18,6 +20,8 @@ const TableComponents = () => {
   const [filteredData, setFilteredData] = useState([]);
   const [selectedRows, setSelectedRows] = useState([]);
   const [selectAll, setSelectAll] = useState(false);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
   const navigate = useNavigate();
 
   const updateTableData = () => {
@@ -93,6 +97,15 @@ const TableComponents = () => {
     }
   };
 
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
   return (
     <div className="table-body">
       <div className="search">
@@ -103,6 +116,7 @@ const TableComponents = () => {
         />
         <div className="actions">
           <Button
+            startIcon={<DeleteOutlineIcon />}
             variant="contained"
             color="secondary"
             onClick={handleDeleteSelected}
@@ -129,7 +143,13 @@ const TableComponents = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {filteredData.map((item) => (
+            {(rowsPerPage > 0
+              ? filteredData.slice(
+                  page * rowsPerPage,
+                  page * rowsPerPage + rowsPerPage
+                )
+              : filteredData
+            ).map((item) => (
               <TableRow key={item.id}>
                 <TableCell>
                   <Checkbox
@@ -165,6 +185,15 @@ const TableComponents = () => {
             ))}
           </TableBody>
         </Table>
+        <TablePagination
+          rowsPerPageOptions={[5, 10, { label: "All", value: -1 }]}
+          component="div"
+          count={filteredData.length}
+          rowsPerPage={rowsPerPage}
+          page={page}
+          onPageChange={handleChangePage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+        />
       </TableContainer>
     </div>
   );
