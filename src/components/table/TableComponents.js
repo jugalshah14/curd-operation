@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from "react";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -12,6 +13,7 @@ import Checkbox from "@mui/material/Checkbox";
 import TablePagination from "@mui/material/TablePagination";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import { useNavigate } from "react-router-dom";
+import TableSortLabel from "@mui/material/TableSortLabel";
 import "./TableStyle.css";
 
 const TableComponents = () => {
@@ -22,6 +24,7 @@ const TableComponents = () => {
   const [selectAll, setSelectAll] = useState(false);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
+
   const navigate = useNavigate();
 
   const updateTableData = () => {
@@ -32,7 +35,6 @@ const TableComponents = () => {
 
   useEffect(() => {
     updateTableData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [localStorage.getItem("formData")]);
 
   useEffect(() => {
@@ -41,7 +43,6 @@ const TableComponents = () => {
     }, 300);
 
     return () => clearTimeout(delayDebounceFn);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchTerm, tableData]);
 
   const filterTableData = () => {
@@ -97,6 +98,35 @@ const TableComponents = () => {
     }
   };
 
+  const [sortConfig, setSortConfig] = useState({
+    key: "",
+    direction: "",
+  });
+
+  const handleSort = (field) => {
+    const direction =
+      sortConfig.key === field && sortConfig.direction === "asc"
+        ? "desc"
+        : "asc";
+
+    const sortedData = [...filteredData].sort((a, b) => {
+      const aValue = a[field];
+      const bValue = b[field];
+      if (aValue < bValue) return direction === "asc" ? -1 : 1;
+      if (aValue > bValue) return direction === "asc" ? 1 : -1;
+      return 0;
+    });
+
+    setSortConfig({ key: field, direction });
+    setFilteredData(sortedData);
+  };
+
+  // useEffect(() => {
+  //   if (sortConfig.key !== "" && sortConfig.key !== filteredData) {
+  //     handleSort(sortConfig.key);
+  //   }
+  // }, [sortConfig, filteredData]);
+
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -133,11 +163,43 @@ const TableComponents = () => {
               <TableCell>
                 <Checkbox checked={selectAll} onChange={handleSelectAll} />
               </TableCell>
-              <TableCell>First Name</TableCell>
-              <TableCell>Last Name</TableCell>
+              <TableCell>
+                <TableSortLabel
+                  active={sortConfig.key === "firstName"}
+                  direction={
+                    sortConfig.key === "firstName"
+                      ? sortConfig.direction
+                      : "asc"
+                  }
+                  onClick={() => handleSort("firstName")}
+                >
+                  First Name
+                </TableSortLabel>
+              </TableCell>
+              <TableCell>
+                <TableSortLabel
+                  active={sortConfig.key === "lastName"}
+                  direction={
+                    sortConfig.key === "lastName" ? sortConfig.direction : "asc"
+                  }
+                  onClick={() => handleSort("lastName")}
+                >
+                  Last Name
+                </TableSortLabel>
+              </TableCell>
               <TableCell>Mobile Number</TableCell>
               <TableCell>Email</TableCell>
-              <TableCell>Gender</TableCell>
+              <TableCell>
+                <TableSortLabel
+                  active={sortConfig.key === "gender"}
+                  direction={
+                    sortConfig.key === "gender" ? sortConfig.direction : "asc"
+                  }
+                  onClick={() => handleSort("gender")}
+                >
+                  Gender
+                </TableSortLabel>
+              </TableCell>
               <TableCell>Password</TableCell>
               <TableCell>Actions</TableCell>
             </TableRow>

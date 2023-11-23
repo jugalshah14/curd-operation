@@ -76,10 +76,6 @@ const FormComponents = ({ editData, editMode }) => {
   const onSubmit = (data) => {
     const urlId = location.pathname.split("/form/")[1];
     data.gender = data.gender ?? "male";
-    // if (!Boolean(id) && passwordStrength < 0.8) {
-    //   toast.error("Password does not meet the required specifications");
-    //   return;
-    // }
 
     if (urlId) {
       const storedData = JSON.parse(localStorage.getItem("formData")) || [];
