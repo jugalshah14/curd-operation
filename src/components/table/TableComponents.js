@@ -239,52 +239,58 @@ const TableComponents = () => {
                   Gender
                 </TableSortLabel>
               </TableCell>
-              <TableCell>Password</TableCell>
               <TableCell>Actions</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {(rowsPerPage > 0
-              ? filteredData.slice(
-                  page * rowsPerPage,
-                  page * rowsPerPage + rowsPerPage
-                )
-              : filteredData
-            ).map((item) => (
-              <TableRow key={item.id}>
-                <TableCell>
-                  <Checkbox
-                    checked={selectedRows.includes(item.id)}
-                    onChange={() => handleCheckboxChange(item.id)}
-                  />
-                </TableCell>
-                <TableCell>{item.firstName}</TableCell>
-                <TableCell>{item.lastName}</TableCell>
-                <TableCell>{item.MobileNumber}</TableCell>
-                <TableCell>{item.dateAndTime}</TableCell>
-                <TableCell>{item.mail}</TableCell>
-                <TableCell>{item.gender}</TableCell>
-                <TableCell>{item.password}</TableCell>
-                <TableCell>
-                  <div className="actions">
-                    <Button
-                      variant="outlined"
-                      color="primary"
-                      onClick={() => handleEdit(item.id)}
-                    >
-                      Edit
-                    </Button>
-                    <Button
-                      variant="outlined"
-                      color="secondary"
-                      onClick={() => handleDelete(item.id)}
-                    >
-                      Delete
-                    </Button>
-                  </div>
+            {filteredData.length === 0 ? (
+              <TableRow>
+                <TableCell colSpan={8} align="center">
+                  No data found.
                 </TableCell>
               </TableRow>
-            ))}
+            ) : (
+              (rowsPerPage > 0
+                ? filteredData.slice(
+                    page * rowsPerPage,
+                    page * rowsPerPage + rowsPerPage
+                  )
+                : filteredData
+              ).map((item) => (
+                <TableRow key={item.id}>
+                  <TableCell>
+                    <Checkbox
+                      checked={selectedRows.includes(item.id)}
+                      onChange={() => handleCheckboxChange(item.id)}
+                    />
+                  </TableCell>
+                  <TableCell>{item.firstName}</TableCell>
+                  <TableCell>{item.lastName}</TableCell>
+                  <TableCell>{item.MobileNumber}</TableCell>
+                  <TableCell>{item.dateAndTime}</TableCell>
+                  <TableCell>{item.mail}</TableCell>
+                  <TableCell>{item.gender}</TableCell>
+                  <TableCell>
+                    <div className="actions">
+                      <Button
+                        variant="outlined"
+                        color="primary"
+                        onClick={() => handleEdit(item.id)}
+                      >
+                        Edit
+                      </Button>
+                      <Button
+                        variant="outlined"
+                        color="secondary"
+                        onClick={() => handleDelete(item.id)}
+                      >
+                        Delete
+                      </Button>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ))
+            )}
           </TableBody>
         </Table>
         <TablePagination
