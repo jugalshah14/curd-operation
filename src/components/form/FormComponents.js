@@ -12,6 +12,7 @@ import FormControl from "@mui/material/FormControl";
 import { v4 as uuidv4 } from "uuid";
 import { ToastContainer, toast } from "react-toastify";
 import "./FormComponents.css";
+import moment from "moment";
 import { useLocation, useParams } from "react-router-dom";
 
 const FormComponents = ({ editData, editMode }) => {
@@ -76,6 +77,13 @@ const FormComponents = ({ editData, editMode }) => {
   const onSubmit = (data) => {
     const urlId = location.pathname.split("/form/")[1];
     data.gender = data.gender ?? "male";
+    const currentDateAndTime = moment().format("DD-MM-YYYY HH:mm");
+    const uniqueId = uuidv4();
+    const formDataWithDateTime = {
+      ...data,
+      id: uniqueId,
+      dateAndTime: currentDateAndTime,
+    };
 
     if (urlId) {
       const storedData = JSON.parse(localStorage.getItem("formData")) || [];
@@ -94,14 +102,10 @@ const FormComponents = ({ editData, editMode }) => {
       }
     }
 
-    const uniqueId = uuidv4();
-    const formDataWithId = { ...data, id: uniqueId };
-
     const storedData = JSON.parse(localStorage.getItem("formData")) || [];
-    storedData.push(formDataWithId);
+    storedData.push(formDataWithDateTime);
     localStorage.setItem("formData", JSON.stringify(storedData));
     reset();
-
     toast.success("Form submitted successfully!");
   };
 

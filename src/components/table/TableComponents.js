@@ -14,6 +14,10 @@ import TablePagination from "@mui/material/TablePagination";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import { useNavigate } from "react-router-dom";
 import TableSortLabel from "@mui/material/TableSortLabel";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import dayjs from "dayjs";
 import "./TableStyle.css";
 
 const TableComponents = () => {
@@ -24,6 +28,7 @@ const TableComponents = () => {
   const [selectAll, setSelectAll] = useState(false);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [selectedDate, setSelectedDate] = useState(null);
 
   const navigate = useNavigate();
 
@@ -45,17 +50,43 @@ const TableComponents = () => {
     return () => clearTimeout(delayDebounceFn);
   }, [searchTerm, tableData]);
 
+  useEffect(() => {
+    filteredDataWithDate();
+  }, [tableData, selectedDate]);
+
+  const handleDateChange = (date) => {
+    const formattedDate = dayjs(date).format("YYYY-MM-DD");
+    setSelectedDate(formattedDate);
+  };
+
+  const filteredDataWithDate = () => {
+    let filtered = tableData;
+
+    if (selectedDate) {
+      const formattedSelectedDate = dayjs(selectedDate).format("DD-MM-YYYY");
+
+      filtered = filtered.filter((item) => {
+        const formattedItemDate = dayjs(item.dateAndTime, "DD-MM-YYYY").format(
+          "DD-MM-YYYY"
+        );
+        return formattedItemDate === formattedSelectedDate;
+      });
+    }
+    setFilteredData(filtered);
+  };
+
   const filterTableData = () => {
-    if (searchTerm === "") {
-      setFilteredData(tableData);
-    } else {
-      const filtered = tableData.filter((item) =>
+    let filtered = tableData;
+
+    if (searchTerm !== "") {
+      filtered = filtered.filter((item) =>
         Object.values(item).some((value) =>
           String(value).toLowerCase().includes(searchTerm.toLowerCase())
         )
       );
-      setFilteredData(filtered);
     }
+
+    setFilteredData(filtered);
   };
 
   const handleSelectAll = () => {
@@ -145,6 +176,13 @@ const TableComponents = () => {
           onChange={(e) => setSearchTerm(e.target.value)}
         />
         <div className="actions">
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DatePicker
+              format="DD/MM/YYYY"
+              value={selectedDate}
+              onChange={handleDateChange}
+            />
+          </LocalizationProvider>
           <Button
             startIcon={<DeleteOutlineIcon />}
             variant="contained"
@@ -188,6 +226,7 @@ const TableComponents = () => {
                 </TableSortLabel>
               </TableCell>
               <TableCell>Mobile Number</TableCell>
+              <TableCell>Date</TableCell>
               <TableCell>Email</TableCell>
               <TableCell>
                 <TableSortLabel
@@ -222,6 +261,7 @@ const TableComponents = () => {
                 <TableCell>{item.firstName}</TableCell>
                 <TableCell>{item.lastName}</TableCell>
                 <TableCell>{item.MobileNumber}</TableCell>
+                <TableCell>{item.dateAndTime}</TableCell>
                 <TableCell>{item.mail}</TableCell>
                 <TableCell>{item.gender}</TableCell>
                 <TableCell>{item.password}</TableCell>

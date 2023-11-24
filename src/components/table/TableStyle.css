@@ -41,3 +41,6 @@ th{
         align-items: center;
         gap: 5px !important;
     }
+.css-nxo287-MuiInputBase-input-MuiOutlinedInput-input{
+    padding:  10px !important;
+}
